@@ -11,6 +11,8 @@ This writeup documents the methodology for completing the Fowsniff CTF room on T
 
 ## Reconnaissance and Scanning
 
+![Nmap scan results](01-nmap-scan.png)
+
 Deployed the machine and began with an Nmap service and default-script scan to identify the target's exposed services.
 
 ```bash
