@@ -11,15 +11,13 @@ This writeup documents the methodology for completing the Fowsniff CTF room on T
 
 ## Reconnaissance and Scanning
 
-![Nmap scan results](01-nmap-scan.png)
-
 Deployed the machine and began with an Nmap service and default-script scan to identify the target's exposed services.
 
 ```bash
 nmap -sC -A "Insert IP" -oN fowSniff.txt
 ```
 
-**Open Ports** (refer to: `01-nmap-scan`)
+**Open Ports**
 
 | Port | Service | Version        |
 |------|---------|----------------|
@@ -28,10 +26,17 @@ nmap -sC -A "Insert IP" -oN fowSniff.txt
 | 110  | POP3    | Dovecot        |
 | 143  | IMAP    | Dovecot        |
 
+![Nmap scan results](01-nmap-scan.png)
+
 ## Web Enumeration
 
-1. Based on inspection, a web server is running on port 80 (refer to: `02-webserver`).
-2. Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords: [github.com/berzerk0/Fowsniff](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
+1. Based on inspection, a web server is running on port 80
+   
+![Web Enumuration](02-webserver.png)
+
+4. Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords: [github.com/berzerk0/Fowsniff](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
+
+![Leaked-Credentials](03-leakedcredentials.png)
 
 ## Credential Analysis
 
