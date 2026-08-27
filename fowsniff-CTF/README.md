@@ -30,11 +30,11 @@ nmap -sC -A "Insert IP" -oN fowSniff.txt
 
 ## Web Enumeration
 
-1. Based on inspection, a web server is running on port 80
+Based on inspection, a web server is running on port 80
    
 <img src="02-webserver.png" alt="Fowsniff web server" width="900">
 
-2. Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords: [github.com/berzerk0/Fowsniff](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
+Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords: [github.com/berzerk0/Fowsniff](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
 
 <img src="03-leaked-credentials.png" alt="Leaked Fowsniff credentials" width="900">
 
