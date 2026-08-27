@@ -40,19 +40,19 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
 
 ## Credential Analysis
 
-1. Copied the contents of the leaked database into a `.txt` file named `fowsniff_leaked.txt`:
+Copied the contents of the leaked database into a `.txt` file named `fowsniff_leaked.txt`:
    
    ```bash
    nano fowsniff_leaked.txt
    ```
-2. Used the following command to keep only the hashes:
+Used the following command to keep only the hashes:
    
    ```bash
    sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
    ```
 <img src="04-Hashes.png" alt="Extracting password hashes" width="650">
    
-3. The passwords are MD5 hashes. Using (https://hashes.com/en/decrypt/hash), we decoded/cracked 8 out of 9 hashed passwords:
+The passwords are MD5 hashes. Using (https://hashes.com/en/decrypt/hash), we decoded/cracked 8 out of 9 hashed passwords:
 
    ```
    0e9588cb62f4b6f27e33d449e2ba0b3b:carp4ever
