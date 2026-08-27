@@ -146,8 +146,6 @@ Navigated to the relevant directory and opened the file with a text editor to in
 
 ## Findings and Remediation
 
-## Findings and Remediation
-
 - **Public credential leak:** Employee usernames and MD5 password hashes were publicly available.  
   **Remediation:** Remove exposed data, reset affected passwords, and investigate for unauthorized access.
 
