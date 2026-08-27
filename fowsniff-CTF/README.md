@@ -68,8 +68,10 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
 
 4. Proceeded by creating two files, one for usernames and one for passwords:
    - Users file
+     
   <img src="06a%20-%20Creating%20users%20file.png" alt="Creating username list" width="900">
    - Passwords file
+     
   <img src="06b%20-%20Creating%20pass%20file.png" alt="Creating password list" width="900">
    
 ## POP3 Enumeration
@@ -90,6 +92,7 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
 <img src="07b%20-%20Metasploit_conf_exploit.png" alt="Configuring POP3 login scanner" width="900">
 
 4. Running the module identified a successful login (refer to: 07c - Metasploit successful login)
+   
 <img src="07c%20-%20Metasploit%20succesful%20login.png" alt="Successful POP3 login" width="900">
 
 ## Initial Access
