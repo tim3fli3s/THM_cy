@@ -45,7 +45,7 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
    ```bash
    nano fowsniff_leaked.txt
    ```
-3. Used the following command to keep only the hashes:
+2. Used the following command to keep only the hashes:
    
    ```bash
    sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
