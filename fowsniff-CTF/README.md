@@ -14,7 +14,7 @@ This writeup documents the methodology for completing the Fowsniff CTF room on T
 Deployed the machine and began with an Nmap service and default-script scan to identify the target's exposed services.
 
 ```bash
-nmap -sC -A 10.82.166.8 -oN fowSniff.txt
+nmap -sC -A "Insert IP" -oN fowSniff.txt
 ```
 
 **Open Ports** (refer to: `01-nmap-scan`)
@@ -72,19 +72,16 @@ nmap -sC -A 10.82.166.8 -oN fowSniff.txt
    use auxiliary/scanner/pop3/pop3_login
    ```
 4. Running the module identified a successful login (refer to: 07c - Metasploit successful login)
-   ```
-   10.82.166.8:110 - 10.82.166.8:110 - Success: 'seina:scoobydoo2' '+OK Logged in.'
-   ```
 
 ## Initial Access
 
 1. Connected to POP3 using the discovered credentials:
    ```bash
-   nc 10.82.166.8 110
+   nc "Insert IP" 110
    ```
    ```
-   USER seina
-   PASS scoobydoo2
+   USER "Insert User"
+   PASS "Insert Password"
    LIST          # Retrieve messages
    RETR 1        # Read message 1 (or 2, etc.)
    ```
@@ -92,7 +89,7 @@ nmap -sC -A 10.82.166.8 -oN fowSniff.txt
 
 3. To identify which user the password belonged to, we ran Hydra against the SSH service (refer to: 08 - Hydra finding user)
    ```bash
-   hydra -L users.txt -p "insert password" ssh://10.82.166.8
+   hydra -L users.txt -p "insert password" ssh://IP ADDRESS
    ```
 
 ## Privilege Escalation
