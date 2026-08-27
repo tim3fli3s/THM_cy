@@ -17,6 +17,8 @@ Deployed the machine and began with an Nmap service and default-script scan to i
 nmap -sC -A "Insert IP" -oN fowSniff.txt
 ```
 
+-sC runs Nmap's default scripts to check for common misconfigurations, -A enables OS/version detection, and -oN saves the output to a file for later reference.
+
 **Open Ports**
 
 | Port | Service | Version        |
@@ -50,6 +52,8 @@ Used the following command to keep only the hashes:
    ```bash
    sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
    ```
+The leaked file has username:hash pairs. This sed command strips everything before the : and keeps only the hash, since the cracking tool only needs the hashes.
+
 <img src="images/04-Hashes.png" alt="Extracting password hashes" width="650">
    
 The passwords are MD5 hashes. Using (https://hashes.com/en/decrypt/hash), we decoded/cracked 8 out of 9 hashed passwords:
@@ -124,6 +128,8 @@ Ran the following command to identify files that can be executed by this user:
    find / -group users -type f 2>/dev/null
    ```
    This identified `cube.sh` as a file the user could run 
+
+Searches the whole filesystem for files owned by the users group, since that's the group our shell landed in — a common way to spot files we have unexpected permission to run. 2>/dev/null hides permission-denied errors so the output stays readable.
    
 <img src="images/10%20-%20Groups%20%26%20files%20run%20by%20user.png" alt="Group and file enumeration" width="650">
 
