@@ -68,11 +68,8 @@ The passwords are MD5 hashes. Using (https://hashes.com/en/decrypt/hash), we dec
 
 Proceeded by creating two files, one for usernames and one for passwords:
 
- Users
-
   <img src="06a%20-%20Creating%20users%20file.png" alt="Creating username list" width="650">
   
-Password
   <img src="06b%20-%20Creating%20pass%20file.png" alt="Creating password list" width="650">
    
 ## POP3 Enumeration
