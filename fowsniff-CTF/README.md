@@ -41,10 +41,12 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
 ## Credential Analysis
 
 1. Copied the contents of the leaked database into a `.txt` file named `fowsniff_leaked.txt`:
+   
    ```bash
    nano fowsniff_leaked.txt
    ```
-2. Used the following command to keep only the hashes:
+3. Used the following command to keep only the hashes:
+   
    ```bash
    sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
    ```
