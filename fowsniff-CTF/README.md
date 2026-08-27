@@ -66,38 +66,39 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
    ```
 <img src="05a-Hashes_decryption.png" alt="Hash decryption results" width="650">
 
-4. Proceeded by creating two files, one for usernames and one for passwords:
-   - Users file
-     
+Proceeded by creating two files, one for usernames and one for passwords:
+
+ Users
+
   <img src="06a%20-%20Creating%20users%20file.png" alt="Creating username list" width="650">
-   - Passwords file
-     
+  
+Password
   <img src="06b%20-%20Creating%20pass%20file.png" alt="Creating password list" width="650">
    
 ## POP3 Enumeration
-1. Following room instructions, launched Metasploit from the terminal:
+Following room instructions, launched Metasploit from the terminal:
    ```bash
    msfconsole
    ```
-2. Since POP3 was open, searched for a relevant exploit 
+Since POP3 was open, searched for a relevant exploit 
    ```
    search pop3
    ```
 <img src="07a%20-%20Metasploit_search.png" alt="Searching Metasploit for POP3 modules" width="650">
 
-3. Selected the `auxiliary/scanner/pop3/pop3_login` module as guided by the room instructions and proceeded by configuring it
+Selected the `auxiliary/scanner/pop3/pop3_login` module as guided by the room instructions and proceeded by configuring it
    ```
    use auxiliary/scanner/pop3/pop3_login
    ```
 <img src="07b%20-%20Metasploit_conf_exploit.png" alt="Configuring POP3 login scanner" width="650">
 
-4. Running the module identified a successful login (refer to: 07c - Metasploit successful login)
+Running the module identified a successful login (refer to: 07c - Metasploit successful login)
    
 <img src="07c%20-%20Metasploit%20succesful%20login.png" alt="Successful POP3 login" width="650">
 
 ## Initial Access
 
-1. Connected to POP3 using the discovered credentials:
+Connected to POP3 using the discovered credentials:
    ```bash
    nc "Insert IP" 110
    ```
@@ -107,9 +108,9 @@ Fowsniff's internal system suffered a data breach that resulted in the exposure 
    LIST          # Retrieve messages
    RETR 1        # Read message 1 (or 2, etc.)
    ```
-2. Reading message 1 revealed a temporary SSH password
+Reading message 1 revealed a temporary SSH password
 
-3. To identify which user the password belonged to, we ran Hydra against the SSH service 
+To identify which user the password belonged to, we ran Hydra against the SSH service 
    ```bash
    hydra -L users.txt -p "insert password" ssh://IP ADDRESS
    ```
@@ -135,14 +136,15 @@ Navigated to the relevant directory and opened the file with a text editor to in
    ```
 <img src="11%20-%20Reverse%20shell.png" alt="Reverse shell payload" width="650">
 
-   This file is included in `/etc/update-motd.d/`, so on the next startup / SSH connection, it triggers a reverse shell.
-5. Set up a Netcat listener to catch the incoming connection 
+This file is included in `/etc/update-motd.d/`, so on the next startup / SSH connection, it triggers a reverse shell.
+
+Set up a Netcat listener to catch the incoming connection 
    ```bash
    nc -lvnp 1234
    ```
-6. Connection established — running `whoami` confirmed root access.
+Connection established — running `whoami` confirmed root access.
 
-<img src="12%20-%20Netcat%20listener%20connection.png" alt="Netcat listener root connection" width="650"> ```
+<img src="12%20-%20Netcat%20listener%20connection.png" alt="Netcat listener root connection" width="650"> 
 
 ## Findings and Remediation
 
