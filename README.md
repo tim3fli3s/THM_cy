@@ -1,6 +1,6 @@
 # TryHackMe Cybersecurity Writeups
 
-This repository documents my practical cybersecurity learning through TryHackMe rooms and labs.
+This repository documents practical cybersecurity learning through TryHackMe rooms and labs.
 
 The writeups focus on:
 
