@@ -173,7 +173,5 @@ Connection established — running `whoami` confirmed root access.
 
 ## References
 
-- [TryHackMe](https://tryhackme.com/)
+- [TryHackMe](https://tryhackme.com/room/ctf)
 - [Fowsniff leaked credentials file](https://github.com/berzerk0/Fowsniff/blob/main/fowsniff.txt)
-- [Nmap documentation](https://nmap.org/book/man.html)
-- [Metasploit Framework documentation](https://docs.metasploit.com/)
