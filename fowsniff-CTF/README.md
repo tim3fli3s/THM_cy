@@ -52,7 +52,7 @@ Used the following command to keep only the hashes:
    ```bash
    sed -n 's/.*://p' fowsniff_leaked.txt > hashes.txt
    ```
-The leaked file has username:hash pairs. This sed command strips everything before the : and keeps only the hash, since the cracking tool only needs the hashes.
+The leaked file has username:hash pairs. This sed command strips everything before the : and keeps only the hash
 
 <img src="images/04-Hashes.png" alt="Extracting password hashes" width="650">
    
